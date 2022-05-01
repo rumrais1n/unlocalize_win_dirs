@@ -16,4 +16,8 @@ foreach($Directory in $Directories) {
 
 	# desktop.iniにシステムファイル属性を付与
 	cmd /c attrib "$env:USERPROFILE\$Directory\desktop.ini" +s +h
+
+	# Explorerを再起動
+	Stop-Process -Name Explorer -Force
+	Start-Process -FilePath "C:\Windows\explorer.exe"
 }
