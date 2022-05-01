@@ -2,22 +2,22 @@ $Directories = @("Contacts", "Desktop", "Documents", "Downloads", "Favorites", "
 $CurrentDate = Get-Date -Format "yyyyMMddHHmmss"
 
 foreach($Directory in $Directories) {
-	#バックアップを作成
+	# Make a backup file
 	Copy-Item "$env:USERPROFILE\$Directory\desktop.ini" "$env:USERPROFILE\$Directory\desktop.ini.$CurrentDate"
 	
-	# desktop.iniの内容を取得
+	# Get content on desktop.ini
 	$DesktopIni = Get-Content "$env:USERPROFILE\$Directory\desktop.ini"
 	
-	# システム属性がついているとファイルを編集できないため、desktop.iniのシステムファイル属性を解除
+	# Unset system file attribution to edit desktop.ini
 	cmd /c attrib "$env:USERPROFILE\$Directory\desktop.ini" -s -h
 
-	# ローカライズ設定を解除
+	# Unset localize settings
 	$DesktopIni.Replace("LocalizedResourceName", ";LocalizedResourceName") > "$env:USERPROFILE\$Directory\desktop.ini"
 
-	# desktop.iniにシステムファイル属性を付与
+	# Set system file attribution again
 	cmd /c attrib "$env:USERPROFILE\$Directory\desktop.ini" +s +h
 
-	# Explorerを再起動
+	# Restart Explorer
 	Stop-Process -Name Explorer -Force
 	Start-Process -FilePath "C:\Windows\explorer.exe"
 }
